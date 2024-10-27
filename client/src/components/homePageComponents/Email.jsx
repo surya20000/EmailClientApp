@@ -1,21 +1,20 @@
 import {
   getParticularEmail,
-  getParticularEmailErrorMessage,
-  getParticularEmailLoadingState,
   getEmailDescription,
 } from "../../reducers/EmailReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { addFavoriteEmail } from "../../reducers/FavoriteEmailReducer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { markEmailAsRead } from "../../reducers/AllEmailReducer";
 import { addEmail } from "../../reducers/ReadEmailReducer";
+import { getAllFavoriteEmails } from "../../reducers/FavoriteEmailReducer";
 
 const Email = () => {
   const dispatch = useDispatch();
   const email = useSelector(getParticularEmail);
   const emailDescription = useSelector(getEmailDescription);
-  const errorMessage = useSelector(getParticularEmailErrorMessage);
-  const loading = useSelector(getParticularEmailLoadingState);
+  const allFavoriteEmails = useSelector(getAllFavoriteEmails);
+  const [changeText, setChangeText] = useState(false);
 
   useEffect(() => {
     if (email) {
@@ -23,6 +22,16 @@ const Email = () => {
       dispatch(addEmail(emailDescription));
     }
   }, [dispatch, email, emailDescription, emailDescription.id]);
+
+  useEffect(() => {
+    const emailExistAsFavoriteEmail = allFavoriteEmails.some(
+      (email) => email.id === emailDescription.id
+    );
+
+    if (emailExistAsFavoriteEmail) {
+      setChangeText(true);
+    }
+  }, [allFavoriteEmails, emailDescription.id]);
 
   const EmailDateTime = ({ date }) => {
     const formatDateTime = (timestamp) => {
@@ -59,8 +68,8 @@ const Email = () => {
 
   const handleMarkAsFavorite = (obj) => {
     try {
-      console.log("email obj ", obj);
       dispatch(addFavoriteEmail(obj));
+      setChangeText(true);
     } catch (error) {
       console.log(error.message);
     }
@@ -85,9 +94,13 @@ const Email = () => {
         <div>
           <button
             className="bg-pink-500 text-white rounded-lg px-4 py-2 transition duration-200 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
-            onClick={() => handleMarkAsFavorite(emailDescription)}
+            onClick={
+              changeText
+                ? () => {}
+                : () => handleMarkAsFavorite(emailDescription)
+            }
           >
-            Mark as Favorite
+            {changeText ? "Marked As Favorite" : "Mark as Favorite"}
           </button>
         </div>
       </div>
