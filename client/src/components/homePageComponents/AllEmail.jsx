@@ -172,6 +172,9 @@ const AllEmail = () => {
             })
           ) : filterEmailsBy === "Read" && allReadEmails.length > 0 ? (
             allReadEmails.map((email) => {
+              const isFavorite = allFavoriteEmails.some(
+                (favoriteEmail) => favoriteEmail.id === email.id
+              );
               return (
                 <div
                   className="flex p-4 text-sm hover:cursor-pointer bg-white rounded-lg mb-4 max-w-full shadow-sm transition-transform duration-200 transform"
@@ -211,7 +214,17 @@ const AllEmail = () => {
                       <p className="text-gray-600 p-1">
                         {email.short_description}
                       </p>
-                      <EmailDateTime date={email.date} />
+                      <div className="flex items-center">
+                        <EmailDateTime date={email.date} />
+                        <span className="ml-2">
+                          {isFavorite && (
+                            <span className="text-pink-500 text-base font-semibold">
+                              {" "}
+                              Favorite
+                            </span>
+                          )}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -219,6 +232,9 @@ const AllEmail = () => {
             })
           ) : filterEmailsBy === "Favorites" && allFavoriteEmails.length > 0 ? (
             allFavoriteEmails.map((email) => {
+              const isFavorite = allFavoriteEmails.some(
+                (favoriteEmail) => favoriteEmail.id === email.id
+              );
               return (
                 <div
                   className="flex p-4 text-sm hover:cursor-pointer bg-white rounded-lg mb-4 max-w-full shadow-sm transition-transform duration-200 transform"
@@ -258,7 +274,17 @@ const AllEmail = () => {
                       <p className="text-gray-600 p-1">
                         {email.short_description}
                       </p>
-                      <EmailDateTime date={email.date} />
+                      <div className="flex items-center">
+                        <EmailDateTime date={email.date} />
+                        <span className="ml-2">
+                          {isFavorite && (
+                            <span className="text-pink-500 text-base font-semibold">
+                              {" "}
+                              Favorite
+                            </span>
+                          )}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
