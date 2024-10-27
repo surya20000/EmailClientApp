@@ -33,6 +33,17 @@ export const allEmailsSlice = createSlice({
         (email) => !email.read
       );
     },
+    checkForAlreadyReadMails: (state, action) => {
+      const allReadEmailsArray = action.payload;
+      state.allUnreadEmails = state.allUnreadEmails.filter(
+        (unreadEmail) =>
+          !allReadEmailsArray.some(
+            (readEmail) => String(readEmail.id) === String(unreadEmail.id)
+          )
+      );
+
+      console.log("Updated allUnreadEmails:", state.allUnreadEmails);
+    },
   },
   extraReducers: (builder) => {
     //* creating cases for fetching all the emails
@@ -51,7 +62,8 @@ export const allEmailsSlice = createSlice({
   },
 });
 
-export const { markEmailAsRead } = allEmailsSlice.actions;
+export const { markEmailAsRead, checkForAlreadyReadMails } =
+  allEmailsSlice.actions;
 export const getAllUnreadEmails = (state) => state.allEmails.allUnreadEmails;
 export const getLoadingState = (state) => state.allEmails.loading;
 export const getErrorMessage = (state) => state.allEmails.error;

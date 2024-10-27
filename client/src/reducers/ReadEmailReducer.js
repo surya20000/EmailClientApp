@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const ReadEmailSlice = createSlice({
   name: "readEmails",
   initialState: {
-    readEmails: [],
+    readEmails: JSON.parse(localStorage.getItem("readEmails")) || [],
   },
   reducers: {
     addEmail: (state, action) => {
@@ -13,6 +13,7 @@ export const ReadEmailSlice = createSlice({
       );
       if (!exists) {
         state.readEmails.push(action.payload);
+        localStorage.setItem("readEmails", JSON.stringify(state.readEmails));
       }
     },
   },

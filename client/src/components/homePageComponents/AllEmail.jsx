@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchAllEmail,
@@ -6,6 +6,7 @@ import {
   getErrorMessage,
   getLoadingState,
 } from "../../reducers/AllEmailReducer";
+import { checkForAlreadyReadMails } from "../../reducers/AllEmailReducer";
 import { getFilterEmailsBy } from "../../reducers/FilterEmailReducer";
 import { fetchEmail, setEmailDescription } from "../../reducers/EmailReducer";
 import { getAllReadEmails } from "../../reducers/ReadEmailReducer";
@@ -23,6 +24,7 @@ const AllEmail = () => {
   const loading = useSelector(getLoadingState);
   const [showNextPageButton, setShowNextPageButton] = useState(true);
   const [showEmailComponent, setShowEmailComponent] = useState(false);
+  const hasRun = useRef(false);
 
   const EmailDateTime = ({ date }) => {
     const formatDateTime = (timestamp) => {
@@ -94,6 +96,17 @@ const AllEmail = () => {
   useEffect(() => {
     dispatch(fetchAllEmail("1"));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (
+      !hasRun.current &&
+      allUnreadEmails.length > 0 &&
+      allReadEmails.length > 0
+    ) {
+      dispatch(checkForAlreadyReadMails(allReadEmails));
+      hasRun.current = true;
+    }
+  }, [allReadEmails, allUnreadEmails, dispatch]);
 
   return (
     <div>

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const FavoriteEmailSlice = createSlice({
   name: "favoriteEmails",
   initialState: {
-    favoriteEmails: [],
+    favoriteEmails: JSON.parse(localStorage.getItem("favoriteEmails")) || [],
   },
   reducers: {
     addFavoriteEmail: (state, action) => {
@@ -14,6 +14,10 @@ export const FavoriteEmailSlice = createSlice({
 
       if (!exists) {
         state.favoriteEmails.push(newEmail);
+        localStorage.setItem(
+          "favoriteEmails",
+          JSON.stringify(state.favoriteEmails)
+        );
       }
     },
   },

@@ -19,8 +19,6 @@ export const EmailSlice = createSlice({
       subject: "",
       read: "",
     },
-    loading: false,
-    error: null,
   },
   reducers: {
     setEmailDescription: (state, action) => {
@@ -37,15 +35,8 @@ export const EmailSlice = createSlice({
   },
   extraReducers: (builder) => {
     //* creating cases for fetching a particular email
-    builder.addCase(fetchEmail.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(fetchEmail.fulfilled, (state, action) => {
       state.email = action.payload;
-      state.loading = false;
-    });
-    builder.addCase(fetchEmail.rejected, (state, action) => {
-      state.error = action.error.message;
       state.loading = false;
     });
   },
@@ -53,8 +44,6 @@ export const EmailSlice = createSlice({
 
 export const getParticularEmail = (state) => state.email.email;
 export const getEmailDescription = (state) => state.email.emailDescription;
-export const getParticularEmailLoadingState = (state) => state.email.loading;
-export const getParticularEmailErrorMessage = (state) => state.email.error;
 
 export const { setEmailDescription } = EmailSlice.actions;
 export default EmailSlice.reducer;
